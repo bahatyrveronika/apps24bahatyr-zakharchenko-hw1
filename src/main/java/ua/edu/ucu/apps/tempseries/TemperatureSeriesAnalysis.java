@@ -201,7 +201,7 @@ public class TemperatureSeriesAnalysis {
     }
 
     public double[] getTemperatures() {
-        return this.temperatures;
+        return Arrays.copyOf(this.temperatures, this.size);
     }
 
     public int getSize() {
