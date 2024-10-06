@@ -162,8 +162,8 @@ public class TemperatureSeriesAnalysis {
     }
 
     public double[] sortTemps() { //tested
-        Arrays.sort(this.temperatures, 0, size);
-        return this.temperatures;
+        Arrays.sort(this.temperatures, 0, this.size);
+        return Arrays.copyOf(this.temperatures, this.size);
     }
 
     public TempSummaryStatistics summaryStatistics() {
