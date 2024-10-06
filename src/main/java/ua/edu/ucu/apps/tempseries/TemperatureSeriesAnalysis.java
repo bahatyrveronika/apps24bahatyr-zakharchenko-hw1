@@ -4,17 +4,19 @@ import java.util.Arrays;
 import java.util.InputMismatchException;
 
 public class TemperatureSeriesAnalysis {
+    private static final int CAPACITY = 10;
+    private static final double NOTCORRECT = -273.0;
     private double[] temperatures;
     private int size;
 
     public TemperatureSeriesAnalysis() {
         this.size = 0;
-        this.temperatures = new double[10];
+        this.temperatures = new double[CAPACITY];
     }
 
     public TemperatureSeriesAnalysis(double[] temperatureSeries) {
         for (double temp : temperatureSeries) {
-            if (temp < -273) {
+            if (temp < NOTCORRECT) {
                 throw new InputMismatchException("Invalid temperature");
             }
         }
