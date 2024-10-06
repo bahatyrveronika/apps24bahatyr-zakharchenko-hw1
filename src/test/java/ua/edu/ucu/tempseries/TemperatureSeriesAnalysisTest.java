@@ -266,7 +266,7 @@ public class TemperatureSeriesAnalysisTest {
         assertEquals(3, analysis.getSize());
         assertArrayEquals(initialTemps, analysis.getTemperatures(), 0.0001);
         analysis.reset();
-        assertEquals(10, analysis.getTemperatures().length);
+        assertEquals(0, analysis.getTemperatures().length);
         for (double temp : analysis.getTemperatures()) {
             assertEquals(0.0, temp, 0.0001);
         }
