@@ -40,7 +40,8 @@ public class TemperatureSeriesAnalysis {
         double rez = 0.0;
 
         for (int i = 0; i < this.size; i++) {
-            rez += Math.pow(this.temperatures[i] - mean, 2);
+            double d = this.temperatures[i] - mean;
+            rez += d * d;
         }
         return Math.sqrt(rez / this.size);
     }
@@ -87,7 +88,8 @@ public class TemperatureSeriesAnalysis {
             if (Math.abs(this.temperatures[i] - tempValue) < closest) {
                 idx = i;
                 closest = Math.abs(this.temperatures[i] - tempValue);
-            } else if (Math.abs(this.temperatures[i] - tempValue) == closest && this.temperatures[i] > 0 && this.temperatures[idx] < 0) {
+            } else if (Math.abs(this.temperatures[i] - tempValue) == closest &&
+                this.temperatures[i] > 0 && this.temperatures[idx] < 0) {
                 idx = i;
                 closest = Math.abs(this.temperatures[i] - tempValue);
             }
@@ -132,17 +134,19 @@ public class TemperatureSeriesAnalysis {
         return correct;
     }
 
-    public double[] findTempsInRange(double lowerBound, double upperBound) { //tested
+    public double[] findTempsInRange(double lowerBound, double upperBound) {
         int count = 0;
         for (int i = 0; i < size; i++) {
-            if (temperatures[i] >= lowerBound && temperatures[i] <= upperBound) {
+            if (this.temperatures[i] >= lowerBound &&
+                this.temperatures[i] <= upperBound) {
                 count++;
             }
         }
         double[] result = new double[count];
         int index = 0;
         for (int i = 0; i < size; i++) {
-            if (this.temperatures[i] >= lowerBound && this.temperatures[i] <= upperBound) {
+            if (this.temperatures[i] >= lowerBound &&
+                this.temperatures[i] <= upperBound) {
                 result[index] = this.temperatures[i];
                 index++;
             }
@@ -151,7 +155,7 @@ public class TemperatureSeriesAnalysis {
     }
 
     public void reset() { //tested
-        this.temperatures = new double[10];
+        this.temperatures = new double[CAPACITY];
         this.size = 0;
 
     }
@@ -196,12 +200,6 @@ public class TemperatureSeriesAnalysis {
         return this.size;
     }
 
-    // public static void main(String[] args) {
-    //     double[] temps = {-1.0, 1.5, -3.5, 2.0, 4.5};
-    //     TemperatureSeriesAnalysis analysis = new TemperatureSeriesAnalysis(temps);
-    //     int clth = analysis.addTemps(1.0, -2.0, 0.0);
-    //     System.out.println(clth);
-    // }
     public double[] getTemperatures() {
         return this.temperatures;
     }
