@@ -1,64 +1,214 @@
 package ua.edu.ucu.apps.tempseries;
 
+import java.util.Arrays;
+import java.util.InputMismatchException;
+
 public class TemperatureSeriesAnalysis {
+    private double[] temperatures;
+    private int size;
 
     public TemperatureSeriesAnalysis() {
-
+        this.size = 0;
+        this.temperatures = new double[10];
     }
 
     public TemperatureSeriesAnalysis(double[] temperatureSeries) {
+        for (double temp : temperatureSeries) {
+            if (temp < -273) {
+                throw new InputMismatchException("Invalid temperature");
+            }
+        }
+        this.temperatures = temperatureSeries;
+        this.size = temperatureSeries.length;
+    }
+
+    public double average() { //tested
+        if (size == 0) {
+            throw new IllegalArgumentException("Temperature series is empty");
+        }
+        double zag = 0;
+        for (int i = 0; i < size; i++) {
+        zag += this.temperatures[i];
+        }
+        return zag/this.size;
+    }
+
+    public double deviation() { //tested
+        if (size == 0) {
+            throw new IllegalArgumentException("empty");
+        }
+        double mean = this.average();
+        double rez = 0.0;
+    
+        for (int i = 0; i < this.size; i++) {
+            rez += Math.pow(this.temperatures[i] - mean, 2);
+        }
+        return Math.sqrt(rez / this.size);
+    }
+
+    public double min() { //tested
+        if (size == 0) {
+            throw new IllegalArgumentException("Temperature series is empty.");
+        }
+        double minimum = this.temperatures[0];
+        for (int i = 1; i<this.size; i++) {
+            if (this.temperatures[i] < minimum){
+                minimum = this.temperatures[i];
+            }
+        }
+        return minimum;
+    }
+
+    public double max() { //tested
+        if (this.size == 0) {
+            throw new IllegalArgumentException("Temperature series is empty.");
+        }
+        double maximum = this.temperatures[0];
+        for (int i = 1; i<this.size; i++) {
+            if (this.temperatures[i] > maximum){
+                maximum = this.temperatures[i];
+            }
+        }
+        return maximum;
+    }
+
+    public double findTempClosestToZero() { //tested
+        return findTempClosestToValue(0);
+    }
+
+    public double findTempClosestToValue(double tempValue) { //tested
+        if (size == 0) {
+            throw new IllegalArgumentException("Temperature series is empty.");
+        } else if ( size == 1) {
+            return this.temperatures[0];
+        }
+        double closest = Math.abs(this.temperatures[0]-tempValue);
+        int idx = 0;
+        for (int i = 1; i < this.size; i++) {
+            if (Math.abs(this.temperatures[i]-tempValue)<closest){
+                idx = i;
+                closest = Math.abs(this.temperatures[i]-tempValue);
+            } else if (Math.abs(this.temperatures[i]-tempValue) == closest && this.temperatures[i] > 0 && this.temperatures[idx] < 0){
+                idx = i;
+                closest = Math.abs(this.temperatures[i]-tempValue);
+            }
+            
+        }
+        return this.temperatures[idx];
+    }
+
+    public double[] findTempsLessThen(double tempValue) { //tested
+        int count = 0;
+        for (int i = 0; i < size; i++) {
+            if (this.temperatures[i] < tempValue) {
+                count++;
+            }
+        }
+        double[] correct = new double[count];
+        int idx = 0;
+        for (int i = 0; i < size; i++) {
+            if (temperatures[i] < tempValue) {
+                correct[idx] = this.temperatures[i];
+                idx++;
+            }
+        }
+        return correct;
+    }
+
+    public double[] findTempsGreaterThen(double tempValue) { //tested
+        int count = 0;
+        for (int i = 0; i < size; i++) {
+            if (this.temperatures[i] >= tempValue) {
+                count++;
+            }
+        }
+        double[] correct = new double[count];
+        int idx = 0;
+        for (int i = 0; i < size; i++) {
+            if (temperatures[i] >= tempValue) {
+                correct[idx] = this.temperatures[i];
+                idx++;
+            }
+        }
+        return correct;
+    }
+
+    public double[] findTempsInRange(double lowerBound, double upperBound) { //tested
+        int count = 0;
+        for (int i = 0; i < size; i++) {
+            if (temperatures[i] >= lowerBound && temperatures[i] <= upperBound) {
+                count++;
+            }
+        }
+        double[] result = new double[count];
+        int index = 0;
+        for (int i = 0; i < size; i++) {
+            if (this.temperatures[i] >= lowerBound && this.temperatures[i] <= upperBound) {
+                result[index] = this.temperatures[i];
+                index++;
+            }
+        }
+        return result;
+    }
+
+    public void reset() { //tested
+        this.temperatures = new double[10];
+        this.size = 0;
 
     }
 
-    public double average() {
-        return -1;
-    }
-
-    public double deviation() {
-        return 0;
-    }
-
-    public double min() {
-        return 0;
-    }
-
-    public double max() {
-        return 0;
-    }
-
-    public double findTempClosestToZero() {
-        return 0;
-    }
-
-    public double findTempClosestToValue(double tempValue) {
-        return 0;
-    }
-
-    public double[] findTempsLessThen(double tempValue) {
-        return null;
-    }
-
-    public double[] findTempsGreaterThen(double tempValue) {
-        return null;
-    }
-
-    public double[] findTempsInRange(double lowerBound, double upperBound) {
-        return null;
-    }
-
-    public void reset() {
-
-    }
-
-    public double[] sortTemps() {
-        return null;
+    public double[] sortTemps() { //tested
+        Arrays.sort(this.temperatures, 0, size);
+        return this.temperatures;
     }
 
     public TempSummaryStatistics summaryStatistics() {
-        return null;
+        if (size == 0) {
+            throw new IllegalArgumentException("Temperature series is empty");
+        }
+        double avgTemp = this.average();
+        double devTemp = this.deviation();
+        double minTemp = this.min();
+        double maxTemp = this.max();
+
+        return new TempSummaryStatistics(avgTemp, devTemp, minTemp, maxTemp);
     }
 
-    public int addTemps(double... temps) {
-        return 0;
+    public int addTemps(double... temps) { //tested
+        for (double temp : temps) {
+            if (temp < -273.0) {
+                throw new InputMismatchException("Invalid temperature " + temp);
+            }
+        }
+        if (this.size + temps.length > this.temperatures.length) {
+            int newcap = (this.temperatures.length + temps.length) * 2; 
+            double[] newtemp = new double[newcap];
+            int idx = 0;
+            for (double temp : this.temperatures){
+                this.temperatures[idx] = temp;
+                idx++;
+            }
+            this.temperatures = newtemp;
+        }
+        for (double temp : temps) {
+            this.temperatures[this.size] = temp;
+            this.size++;
+        }
+        return this.size;
+    }
+
+    // public static void main(String[] args) {
+    //     double[] temps = {-1.0, 1.5, -3.5, 2.0, 4.5};
+    //     TemperatureSeriesAnalysis analysis = new TemperatureSeriesAnalysis(temps);
+    //     int clth = analysis.addTemps(1.0, -2.0, 0.0);
+    //     System.out.println(clth);
+    // }
+
+    public double[] getTemperatures() {
+        return this.temperatures;
+    }
+
+    public int getSize() {
+        return this.size;
     }
 }
