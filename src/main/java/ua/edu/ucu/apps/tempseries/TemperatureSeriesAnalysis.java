@@ -137,16 +137,16 @@ public class TemperatureSeriesAnalysis {
     public double[] findTempsInRange(double lowerBound, double upperBound) {
         int count = 0;
         for (int i = 0; i < size; i++) {
-            if (this.temperatures[i] >= lowerBound &&
-                this.temperatures[i] <= upperBound) {
+            if (this.temperatures[i] >= lowerBound
+                && this.temperatures[i] <= upperBound) {
                 count++;
             }
         }
         double[] result = new double[count];
         int index = 0;
         for (int i = 0; i < size; i++) {
-            if (this.temperatures[i] >= lowerBound &&
-                this.temperatures[i] <= upperBound) {
+            if (this.temperatures[i] >= lowerBound
+                && this.temperatures[i] <= upperBound) {
                 result[index] = this.temperatures[i];
                 index++;
             }
